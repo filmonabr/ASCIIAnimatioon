@@ -1,64 +1,97 @@
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
-var time;
-var animator;
-var i = 1;
-var timer = 250;
-window.onload = function () {
-    var anim = document.getElementById('anim');
-    var area = document.getElementById('area');
-    var start = document.getElementById('start');
-    document.getElementById('check').onchange = speed;
-    document.getElementById('stop').onclick = stop;
-    var size = document.getElementById('size');
-    size.onchange = sizer;
-    anim.onchange = display;
-    start.onclick = gobro;
-}
+"use strict";
 
+(function() {
 
-function display() {
+    var timeInterval = 250;
+    var loopVariable = 0;
+    var timerID = null;
+    var frames = null;
+    var animationStarted = false;
 
-    var images = window.ANIMATIONS[anim.value];
-    animator = images.split("=====");
-    area.innerHTML = animator[0];
-}
+    window.onload = function() {
+        var startElem = document.getElementById("start");
+        var stopElem = document.getElementById("stop");
+        var animationElem = document.getElementById("animation");
+        var fontElem = document.getElementById("size");
+        var turboElem = document.getElementById("turbo");
+        startElem.onclick = start;
+        stopElem.onclick = stop;
+        fontElem.onchange = changeFontSize;
+        turboElem.onclick = changeSpeed;
+        animationElem.onchange = setAnimation;
+        stopElem.disabled = true;
+    };
 
-function gobro() {
-    starter = 0;
-    start.disabled = true;
-    document.getElementById('stop').disabled = false;
-    time = setInterval(animate, timer);
+    function start() {
 
-}
-
-
-function animate() {
-    starter++;
-    if (starter < animator.length) {
-        area.innerHTML = animator[starter];
-    } else {
-        starter = 0;
+        var animationElem = document.getElementById("animation");
+        var mytextarea = document.getElementById("mytextarea");
+        var startElem = document.getElementById("start");
+        var stopElem = document.getElementById("stop");
+        frames = mytextarea.value.split("=====\n");
+        timerID = setInterval(displayFrames, timeInterval);
+        startElem.disabled = true;
+        animationElem.disabled = true;
+        stopElem.disabled = false;
     }
 
-}
-
-function speed() {
-    if (this.checked) {
-        timer = 50;
+    function displayFrames() {
+        var mytextarea = document.getElementById("mytextarea");
+        mytextarea.value = frames[loopVariable];
+        loopVariable = (loopVariable + 1) % (frames.length);
     }
-    else {
-        timer = 250;
+
+    function stop() {
+        var animationElem = document.getElementById("animation");
+        var startElem = document.getElementById("start");
+        var stopElem = document.getElementById("stop");
+        var mytextarea = document.getElementById("mytextarea");
+        clearInterval(timerID);
+        loopVariable = 0;
+
+        mytextarea.value = frames.join("=====\n");
+        startElem.disabled = false;
+        stopElem.disabled = true;
+        animationElem.disabled = false;
     }
-}
 
-function sizer() {
-    area.style.fontSize = size.value;
-}
+    function setAnimation() {
+        var animationElem = document.getElementById("animation");
+        var mytextarea = document.getElementById("mytextarea");
+        var selectedAnimation = animationElem.options[animationElem.selectedIndex].text;
+        if (selectedAnimation != "Custom"){
+            mytextarea.value = ANIMATIONS[selectedAnimation];
+        }
+    }
 
-function stop() {
-    clearInterval(time);
-    time = null;
-    area.innerHTML = animator[0];
-    document.getElementById('start').disabled = false;
-    document.getElementById('stop').disabled = true;
-}
+    function changeFontSize() {
+        var mytextarea = document.getElementById("mytextarea");
+        var fontElem = document.getElementById("size");
+        mytextarea.style.fontSize = fontElem.value;
+    }
+
+    function changeSpeed() {
+        var turboElem = document.getElementById("turbo");
+        var startElem = document.getElementById("start");
+
+        if (turboElem.checked) {
+            timeInterval = 50;
+        } else {
+            timeInterval = 250;
+        }
+
+        clearInterval(timerID);
+        if (startElem.disabled) {
+            timerID = setInterval(displayFrames, timeInterval);
+        } else {
+            //start();
+        }
+    }
+
+})();
