@@ -1,0 +1,45 @@
+#field{
+    width: 550px;
+    background-color: #CCCCFF;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+#bot{
+    background-color: #CCCCFF;
+}
+
+
+#one{
+    float: left;
+    width: 100px;
+}
+#two{
+    float: left;
+    width: 100px;
+}
+#three{
+    float: left;
+    width: 100px;
+}
+#four{
+    float: left;
+    width: 100px;
+}
+#area
+{
+    font:bold 12pt monospace;
+    height: 400px;
+    width: 90%;
+    text-align: left;
+}
+h1{
+
+
+    font:bold 32pt sans-serif;
+    text-align: center;
+
+}
+#valid{
+    float: right;
+}
